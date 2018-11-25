@@ -12,11 +12,11 @@ if [ "$ZONE_TYPE" = "public" ]
 then
     # Verify this value as Route 53 Public Hosted Zone ID of correct AWS account
     ZONE_ID="Z2UE4966K7SC50"
-    DOMAIN_SUFFIX="ecom.a.intuit.com"
+    DOMAIN_SUFFIX="ecom.a.abc.com"
 else
     # Verify this value as Route 53 Private Hosted Zone ID of correct AWS account
     ZONE_ID="ZPHXTU1K8KPJK"
-    DOMAIN_SUFFIX="ecom.a.intuit.net"
+    DOMAIN_SUFFIX="ecom.a.abc.net"
 fi
 
 # More advanced options below
