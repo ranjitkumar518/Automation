@@ -30,39 +30,39 @@ promote_readreplica() {
 }
 
 #Check if RDS instance is back online
-db_available() {
-	echo "Waiting for $1 instance to be available..."
-	aws rds wait db-instance-available --db-instance-identifier $1 --region $FAILOVER_REGION
-	echo "$1 is available now!!"
-}
+# db_available() {
+# 	echo "Waiting for $1 instance to be available..."
+# 	aws rds wait db-instance-available --db-instance-identifier $1 --region $FAILOVER_REGION
+# 	echo "$1 is available now!!"
+# }
 
-activemq_healthcheck() {
-	aws elb describe-instance-health --load-balancer-name $activemqelb  --query 'InstanceStates[*].{id:InstanceId,state:State}' --region $FAILOVER_REGION --output table > ${TMPFILE}
-}
+# activemq_healthcheck() {
+# 	aws elb describe-instance-health --load-balancer-name $activemqelb  --query 'InstanceStates[*].{id:InstanceId,state:State}' --region $FAILOVER_REGION --output table > ${TMPFILE}
+# }
 
-activemq_bringup() {
-	echo "Checking $1 ActiveMQ instance in $2 region if any instance is already in service........."
-	activemq_healthcheck
-	cat ${TMPFILE}
-	if grep -q InService "$TMPFILE"; then
-		echo "Found InService ActiveMQ instance existing already..not restarting" 
-	else
-		echo "Instances are out of rotation..proceeding with the restarts......"
-		instance=$(aws elb describe-instance-health --load-balancer-name ep-activemq-prf1  --query 'InstanceStates[*].InstanceId' --region $FAILOVER_REGION --output text | head -1)
-		echo $instance
-		activemqip=$(aws ec2 describe-instances --instance-ids  $instance --query 'Reservations[].Instances[].PrivateIpAddress' --region $FAILOVER_REGION --output text)
-		echo "Instances are out of rotation..proceeding with the ActiveMQ restart on instanceid:$instance IP:$activemqip......"
-		ssh $activemqip "sudo service activemq restart"
-		if [ $exit_status -eq 0 ]; then
-			echo "Restart has been completed......waiting 45 seconds for the instance to come InService......."
-			sleep 45
-			activemq_healthcheck
-			cat ${TMPFILE}
-		else
-			echo "Restart command was not successful"
-		fi
-	fi
-}
+# activemq_bringup() {
+# 	echo "Checking $1 ActiveMQ instance in $2 region if any instance is already in service........."
+# 	activemq_healthcheck
+# 	cat ${TMPFILE}
+# 	if grep -q InService "$TMPFILE"; then
+# 		echo "Found InService ActiveMQ instance existing already..not restarting" 
+# 	else
+# 		echo "Instances are out of rotation..proceeding with the restarts......"
+# 		instance=$(aws elb describe-instance-health --load-balancer-name ep-activemq-prf1  --query 'InstanceStates[*].InstanceId' --region $FAILOVER_REGION --output text | head -1)
+# 		echo $instance
+# 		activemqip=$(aws ec2 describe-instances --instance-ids  $instance --query 'Reservations[].Instances[].PrivateIpAddress' --region $FAILOVER_REGION --output text)
+# 		echo "Instances are out of rotation..proceeding with the ActiveMQ restart on instanceid:$instance IP:$activemqip......"
+# 		ssh $activemqip "sudo service activemq restart"
+# 		if [ $exit_status -eq 0 ]; then
+# 			echo "Restart has been completed......waiting 45 seconds for the instance to come InService......."
+# 			sleep 45
+# 			activemq_healthcheck
+# 			cat ${TMPFILE}
+# 		else
+# 			echo "Restart command was not successful"
+# 		fi
+# 	fi
+# }
 
 #Convert to MultiAZ master
 convertdb_multiaz() {
@@ -124,8 +124,8 @@ read_config $1
 
 #########Promotion of the DBs in Failover Region########
 #promote_readreplica $epdbcluster
-#promote_readreplica $activemqdbcluster
-#promote_readreplica $entldbcluster
+##promote_readreplica $activemqdbcluster
+##promote_readreplica $entldbcluster
 
 ########################################################
 #todo
@@ -133,12 +133,12 @@ read_config $1
 #####################RDS DNS Switch#####################
 #./failover_dns.sh $1 default private $3 orderstage1
 
-######DB availability check and bring up activemq######
-#db_available $activemqdbinstance
-#activemq_healthcheck
-#activemq_bringup
+#######DB availability check and bring up activemq######
+##db_available $activemqdbinstance
+##activemq_healthcheck
+##activemq_bringup
+##db_available $entldbinstance
 #db_available $epdbinstance
-#db_available $entldbinstance
 
 ##############Scale Up the Failover region##############
 
