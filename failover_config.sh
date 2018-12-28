@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 env=prf1
-activemqelb="ep-activemq-prf1"
-epdbcluster="prf1-ep-aurora56"
+activemqelb="mp-activemq-prf1"
+mpdbcluster="prf1-mp-aurora56"
 activemqdbcluster="prf1-activemq-aurora56-replica1-cluster"
-entldbcluster="prf1-entitlement-aurora56-replica1-cluster"
-epdbinstance="prf1-ep-aurora56-us-east-2b"
+entldbcluster="prf1-entitle-aurora56-replica1-cluster"
+mpdbinstance="prf1-mp-aurora56-us-east-2b"
 activemqdbinstance="prf1-activemq-aurora56-replica1"
-entldbinstance="prf1-entitlement-aurora56-replica1"
-elblist="ep-activemq ep-cortex ep-cortex-ro ep-integration ep-searchmaster ep-searchslave ep-cmserver webs-account webs-order webs-catalog webs-entitlement"
+entldbinstance="prf1-entitle-aurora56-replica1"
+elblist="mp-activemq mp-cortex mp-cortex-ro mp-integration mp-searchmaster mp-searchslave mp-cmserver webs-accountant webs-ordering webs-catalogs webs-entitle"
